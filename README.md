@@ -1,6 +1,6 @@
 # Shamim Wani Real Estate — Washington, DC
 
-A responsive real-estate website with neighborhood guides, property filters, detail views, image galleries, saved homes, and a Supabase-backed admin dashboard.
+A responsive multi-page real-estate website with neighborhood guides, property filters, individual listing pages, saved homes, and a Supabase-backed admin dashboard.
 
 ## Current state
 
@@ -11,6 +11,8 @@ A responsive real-estate website with neighborhood guides, property filters, det
 - `supabase-config.js` contains the Supabase project URL and publishable key. Publishable keys are designed for browser use and rely on correct Row Level Security policies. Never add a Supabase secret/service-role key or passwords to this repository.
 - The owner created the Supabase Auth user, added its UID to `public.admin_users`, disabled public sign-ups, and confirmed admin sign-in and image upload work.
 - Supabase Data API access is limited to the three required `public` tables, with automatic exposure disabled. Row Level Security is enabled on those tables. The public `property-images` bucket allows public reads and admin-only writes.
+- Public pages: `index.html` (home), `properties.html` (search and price filters), `property.html` (individual details and inquiries), `neighborhoods.html` (DC area guides), and `about.html` (about and contact).
+- `site-pages.css`, `site-pages.js`, and `site-data.js` provide responsive shared styling, navigation, and demo content for the additional pages.
 
 ## Preview locally
 
