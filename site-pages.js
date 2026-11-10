@@ -22,9 +22,9 @@
   function renderShell() {
     const current = document.body.dataset.page || '';
     const header = $('siteHeader');
-    if (header) header.innerHTML = `<div class="site-shell"><a class="skip-link" href="#main">Skip to content</a><div class="site-demo-banner"><span class="site-demo-dot"></span><b>DEMO PREVIEW</b><span class="site-demo-note">Sample homes are examples; live inventory appears after an admin publishes listings.</span></div><header class="site-header"><a class="site-brand" href="index.html" aria-label="Shamim Wani Real Estate home"><span class="site-brandmark">SW</span><span class="site-brandname">SHAMIM WANI<small>REAL ESTATE · WASHINGTON, DC</small></span></a><button class="site-menu-button" id="siteMenuButton" type="button" aria-expanded="false" aria-label="Open navigation">☰</button><nav class="site-nav" id="siteNav">${[['home','index.html','Home'],['properties','properties.html','Homes'],['neighborhoods','neighborhoods.html','Neighborhoods'],['about','about.html','About']].map(([key,url,label]) => `<a href="${url}" ${current===key?'aria-current="page"':''}>${label}</a>`).join('')}<a href="index.html?admin=1">Admin</a><a class="site-nav-cta" href="properties.html">Explore homes ↗</a></nav></header></div>`;
+    if (header) header.innerHTML = `<div class="site-shell"><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="site-brand" href="index.html" aria-label="Shamim Wani Real Estate home"><span class="site-brandmark">SW</span><span class="site-brandname">SHAMIM WANI<small>SERVING VIRGINIA &amp; MARYLAND</small></span></a><button class="site-menu-button" id="siteMenuButton" type="button" aria-expanded="false" aria-label="Open navigation">☰</button><nav class="site-nav" id="siteNav">${[['home','index.html','Home'],['properties','properties.html','Homes'],['neighborhoods','neighborhoods.html','Neighborhoods'],['about','about.html','About']].map(([key,url,label]) => `<a href="${url}" ${current===key?'aria-current="page"':''}>${label}</a>`).join('')}<a href="index.html?admin=1">Admin</a><a class="site-nav-cta" href="properties.html">Explore homes ↗</a></nav></header></div>`;
     const footer = $('siteFooter');
-    if (footer) footer.innerHTML = `<footer class="site-footer"><div class="site-shell footer-inner"><span>© 2026 Shamim Wani Real Estate</span><span class="footer-credit">Developed by Abdul Sammi</span><span class="footer-location">Washington, DC · Thoughtful homes, local roots</span></div></footer>`;
+    if (footer) footer.innerHTML = `<footer class="site-footer"><div class="site-shell footer-inner"><span>© 2026 Shamim Wani Real Estate</span><span class="footer-credit">Developed by Abdul Sammi</span><span class="footer-location">Virginia &amp; Maryland<br><a href="tel:+12022570485">202-257-0485</a> · <a href="mailto:wanirealtor@gmail.com">wanirealtor@gmail.com</a></span></div></footer>`;
     const menuButton = $('siteMenuButton');
     menuButton?.addEventListener('click', () => {
       const nav = $('siteNav'), open = nav.classList.toggle('is-open');
@@ -32,16 +32,6 @@
       menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
       menuButton.textContent = open ? '×' : '☰';
     });
-  }
-
-  async function updatePageBanner() {
-    const banner = document.querySelector('.site-demo-banner');
-    if (!banner) return;
-    if (!supa) return;
-    const { count, error } = await supa.from('properties').select('id', { count: 'exact', head: true }).eq('status', 'active');
-    if (error || !count) return;
-    banner.querySelector('b').textContent = 'LIVE LISTINGS';
-    banner.querySelector('.site-demo-note').textContent = 'Published homes from Shamim Wani Real Estate · Sample homes are shown only when no live inventory is available.';
   }
 
   async function getHomes() {
@@ -91,7 +81,7 @@
     getHomes().then((items) => {
       homes = items;
       const areas = [...new Set(items.map((h) => h.area))].sort();
-      areaSelect.innerHTML = '<option value="">All neighborhoods</option>' + areas.map((a) => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
+      areaSelect.innerHTML = '<option value="">All areas</option>' + areas.map((a) => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
       const requestedArea = params.get('area');
       if (areas.includes(requestedArea)) areaSelect.value = requestedArea;
       render();
@@ -110,7 +100,7 @@
   function initNeighborhoods() {
     const grid = $('neighborhoodGrid');
     if (!grid) return;
-    grid.innerHTML = demoAreas.map(([name, summary, source], index) => `<article class="neighborhood-card"><span class="card-number">0${index + 1} / WASHINGTON, DC</span><h2>${esc(name)}</h2><p>${esc(summary)}</p><div class="neighborhood-links"><a href="properties.html?area=${encodeURIComponent(name)}">View homes ↗</a><a href="${safeUrl(source)}" target="_blank" rel="noopener">Area source ↗</a></div></article>`).join('');
+    grid.innerHTML = demoAreas.map(([name, summary, source], index) => `<article class="neighborhood-card"><span class="card-number">0${index + 1} / VIRGINIA &amp; MARYLAND</span><h2>${esc(name)}</h2><p>${esc(summary)}</p><div class="neighborhood-links"><a href="properties.html?area=${encodeURIComponent(name)}">View homes ↗</a><a href="${safeUrl(source)}" target="_blank" rel="noopener">Area source ↗</a></div></article>`).join('');
   }
 
   function feedback(form, message, isError = false) {
@@ -121,7 +111,7 @@
     if (!form) return;
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      if (!supa) { feedback(form, 'The inquiry service is unavailable. Please contact the team by phone.', true); return; }
+      if (!supa) { feedback(form, 'The inquiry service is unavailable. Call 202-257-0485 or email wanirealtor@gmail.com.', true); return; }
       const button = form.querySelector('button[type="submit"]'); button.disabled = true;
       const values = new FormData(form);
       const { error } = await supa.from('inquiries').insert({
@@ -155,9 +145,9 @@
 
   function initContact() { attachInquiryForm($('contactForm')); }
   renderShell();
-  updatePageBanner();
   initProperties();
   initNeighborhoods();
   initPropertyDetail();
   initContact();
 })();
+
